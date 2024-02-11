@@ -1,2 +1,2 @@
 # SportLandia
-Welcome to SportLandia. The place of power
+Welcome to SportLandia. 1 ml in the week, is natural.  
