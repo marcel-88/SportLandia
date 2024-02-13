@@ -30,6 +30,9 @@ namespace TW_WebSite
                       "~/Content/js/templatemo.js",
                       "~/Content/js/custom.js"));
 
+            bundles.Add(new StyleBundle("~/bundles/bootstrap").Include(
+                      "~/Content/bootstrap.min.css"));
+
             BundleTable.EnableOptimizations = true;
 
         }
