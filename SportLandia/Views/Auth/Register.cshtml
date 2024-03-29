@@ -1,11 +1,12 @@
 ﻿@{
+
     Layout = null;
 }
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Login</title>
-    @Styles.Render("~/bundles/bootstrap")
+    @Styles.Render("~/bundles/bootstrap");
 </head>
 <body>
     <section class="vh-100" style="background-color: #d6d6d6;">
@@ -14,6 +15,7 @@
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
+                            @Html.ValidationSummaryToken()
 
                             <h3 class="mb-5">Register</h3>
 

@@ -35,7 +35,7 @@ namespace TW_WebSite.Controllers
                 {
                     Credential = login.Credential,
                     Password = login.Password,
-                    LoginIP = Request.UserHostAddress,
+                    LoginIp = Request.UserHostAddress,
                     LoginDateTime = DateTime.Now,
                 };
 
