@@ -11,11 +11,10 @@ namespace eUseControl.BusinessLogic.DBModel
     class UserContext : DbContext
     {
         public UserContext() :
-    base("name=eUseControl") // connectionstring name define in your web.config
+            base("name=sportLandia") // connectionstring name define in your web.config
         {
         }
 
         public virtual DbSet<ULoginData> Users { get; set; }
-
     }
 }

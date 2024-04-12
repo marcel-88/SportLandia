@@ -17,7 +17,7 @@ namespace eUseControl.Domain.Entities.User
         [Required]
         [Display(Name = "Username")]
         [StringLength(30, MinimumLength = 5, ErrorMessage = "Username cannot be longer than 30 characters.")]
-        public string Credential { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [Display(Name = "Password")]
@@ -35,14 +35,9 @@ namespace eUseControl.Domain.Entities.User
         [StringLength(30)]
         public string LasIp { get; set; }
 
-        [DataType(DataType.Text)] // If it's meant to store an IP address, DataType.Text is appropriate
-        public string LoginIp { get; set; } // Change the field to a property with the correct type and name
+        public URole Level { get; set; }
 
 
-        [DataType(DataType.Date)]
-        public DateTime LoginDateTime;
-
-        
     }
 
 }

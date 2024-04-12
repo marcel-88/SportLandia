@@ -1,14 +1,19 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Login</title>
     @Styles.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
 </head>
 <body>
+
+    @using System.Web.Optimization
+    @model eUseControl.Domain.Entities.User.UserLogin
     <section class="vh-100" style="background-color: #d6d6d6;">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -18,24 +23,68 @@
 
                             <h3 class="mb-5">Login</h3>
 
-                            <div class="form-outline mb-2">
-                                <input type="email" id="typeEmailX-2" class="form-control form-control-lg" />
-                                <label class="form-label" for="typeEmailX-2">Email</label>
+                            @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-signin", @id = "LoginForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-outline mb-2">
+                                    @Html.TextBoxFor(m => m.Credential, new { @class = "form-control form-control-lg", placeholder = "example@gmail.com", title = "Please enter your username" })
+                                    @Html.LabelFor(m => m.Credential, htmlAttributes: new { @class = "form-label" })
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    @Html.TextBoxFor(m => m.Password, new { @class = "form-control form-control-lg", type = "password", placeholder = "********", title = "Please enter your password" })
+                                    @Html.LabelFor(m => m.Password, htmlAttributes: new { @class = "form-label" })
+                                </div>
+
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                            }
+
+                            <div class="text-center mt-3">
+                                <a href="register.html">Register</a>
                             </div>
-
-                            <div class="form-outline mb-4">
-                                <input type="password" id="typePasswordX-2" class="form-control form-control-lg" />
-                                <label class="form-label" for="typePasswordX-2">Password</label>
-                            </div>
-
-                            <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
-
-                            @*<hr class="my-4">*@
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
+
+    <section Scripts>
+        @Scripts.Render("~/bundles/validation/js")
+
+        <script type="text/javascript">
+            $(function () {
+                $("#LoginForm").validate({
+                    rules: {
+                        Credential: {
+                            required: true,
+                            email: true // Assuming Credential is an email.
+                        },
+                        Password: {
+                            required: true
+                        }
+                    },
+                    submitHandler: function (form) {
+                        form.submit();
+                    },
+                    errorPlacement: function (error, element) {
+                        error.addClass('invalid-feedback');
+                        if (element.prop('type') === 'checkbox') {
+                            error.insertAfter(element.next('label'));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
+                    highlight: function (element) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function (element) {
+                        $(element).removeClass('is-invalid');
+                    }
+                });
+            });
+        </script>
     </section>
 </body>
 </html>

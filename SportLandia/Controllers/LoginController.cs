@@ -21,9 +21,10 @@ namespace TW_WebSite.Controllers
         }
 
         public ActionResult Login()
-        {
-            return View();
-        }
+{
+    return View("~/Views/Auth/Login.cshtml");
+}
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -31,7 +32,7 @@ namespace TW_WebSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                ULoginData data = new ULoginData()
+                UserLogin data = new UserLogin
                 {
                     Credential = login.Credential,
                     Password = login.Password,
@@ -40,24 +41,25 @@ namespace TW_WebSite.Controllers
                 };
 
                 var userLogin = _session.UserLogin(data);
-                if(userLogin.Status)
+                if (userLogin.Status)
                 {
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", userLogin.StatusMsg);
-                    return View();
+                    ModelState.AddModelError("", "Invalid username or password.");
+                    return RedirectToAction("About", "Home");
                 }
             }
 
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
-/*        public ActionResult Register()
+
+        public ActionResult Register()
         {
-            return View();
-        }*/
+            return View("~/Views/Auth/Register.cshtml");
+        }
     }
 
 }

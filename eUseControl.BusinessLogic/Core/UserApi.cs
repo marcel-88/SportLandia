@@ -14,7 +14,7 @@ namespace eUseControl.BusinessLogic.Core
     public class UserApi
     {
 
-        internal ULoginResp UserLoginAction(ULoginData data)
+        internal ULoginResp UserLoginAction(UserLogin data)
         {
             ULoginData result;
             var validate = new EmailAddressAttribute();
@@ -46,7 +46,7 @@ namespace eUseControl.BusinessLogic.Core
                 var pass = LoginHelper.HashGen(data.Password);
                 using (var db = new UserContext())
                 {
-                    result = db.Users.FirstOrDefault(u => u.Credential == data.Credential && u.Password == pass);
+                    result = db.Users.FirstOrDefault(u => u.Username == data.Credential && u.Password == pass);
                 }
 
                 if (result == null)
@@ -66,4 +66,5 @@ namespace eUseControl.BusinessLogic.Core
             }
         }
     }
-}
+    }
+
