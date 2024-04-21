@@ -16,6 +16,9 @@ namespace TW_WebSite
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+      // Initialize AutoMapper
+      // AutoMapperConfig.ConfigureMappings();
         }
     }
 }
