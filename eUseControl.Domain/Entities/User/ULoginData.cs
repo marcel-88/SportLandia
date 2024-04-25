@@ -35,7 +35,8 @@ namespace eUseControl.Domain.Entities.User
         [StringLength(30)]
         public string LasIp { get; set; }
 
-        public URole Level { get; set; }
+        public URole Level {get;set; }
+
 
 
     }

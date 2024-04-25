@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.SessionState;
 using eUseControl.BusinessLogic;
 using eUseControl.BusinessLogic.Interfaces;
+using eUseControl.Domain;
 using eUseControl.Domain.Entities.User;
 
 namespace TW_WebSite.Controllers
@@ -43,17 +44,30 @@ namespace TW_WebSite.Controllers
                 var userLogin = _session.UserLogin(data);
                 if (userLogin.Status)
                 {
-                    return RedirectToAction("Index", "Home");
+                    if (userLogin.Level == URole.Admin)
+                    {
+                        return RedirectToAction("AdminChangeProducts", "Admin");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {
                     ModelState.AddModelError("", "Invalid username or password.");
-                    return RedirectToAction("About", "Home");
+                    return RedirectToAction("About","Home");
                 }
             }
+            else
+            {
+                return RedirectToAction("About", "Home");
 
-            return RedirectToAction("Index", "Home");
+            }
         }
+
+
+
 
 
         public ActionResult Register()
