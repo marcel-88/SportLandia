@@ -1,12 +1,11 @@
-﻿@{
+﻿@using System.Web.Optimization
+@model eUseControl.Domain.Entities.User.UserRegister
 
-    Layout = null;
-}
-
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Login</title>
-    @Styles.Render("~/bundles/bootstrap");
+    <title>Register</title>
+    @Styles.Render("~/bundles/bootstrap")
 </head>
 <body>
     <section class="vh-100" style="background-color: #d6d6d6;">
@@ -15,34 +14,112 @@
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
-                           
 
                             <h3 class="mb-5">Register</h3>
 
-                            <div class="form-outline mb-2">
-                                <input type="email" id="typeEmailX-2" class="form-control form-control-lg" />
-                                <label class="form-label" for="typeEmailX-2">Email</label>
+                            @using (Html.BeginForm("Register", "Auth", FormMethod.Post, new { @class = "form-signin", @id = "RegisterForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                
+                                <div class="form-outline mb-2">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg", type = "email", placeholder = "example@gmail.com", title = "Please enter your email" })
+                                    @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                                </div>
+                               
+
+
+                                <div class="form-outline mb-2">
+                                    @Html.TextBoxFor(m => m.Password, new { @class = "form-control form-control-lg", type = "password", placeholder = "********", title = "Please enter your password" })
+                                    @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control form-control-lg" placeholder="********" title="Repeat your password" />
+                                    <label for="ConfirmPassword" class="form-label">Repeat your password</label>
+                                </div>
+
+
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
+                            }
+
+                            <div class="text-center mt-3">
+                                <a href="login.html">Login</a>
                             </div>
-
-                            <div class="form-outline mb-2">
-                                <input type="password" id="typePasswordX-2" class="form-control form-control-lg" />
-                                <label class="form-label" for="typePasswordX-2">Password</label>
-                            </div>
-
-                            <div class="form-outline mb-4">
-                                <input type="password" id="typePasswordX-2" class="form-control form-control-lg" />
-                                <label class="form-label" for="typePasswordX-2">Repeat Password</label>
-                            </div>
-
-                            <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
-
-                            @*<hr class="my-4">*@
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    @{
+        var script = @"
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var password = document.getElementById('Password');
+    var confirmPassword = document.getElementById('ConfirmPassword');
+
+    // Validate password on input
+    password.addEventListener('input', function() {
+        validatePasswordLive();
+    });
+
+    // Validate confirm password on input
+    confirmPassword.addEventListener('input', function() {
+        validateConfirmPasswordLive();
+    });
+
+    var registrationForm = document.getElementById('RegisterForm');
+    registrationForm.addEventListener('submit', function(event) {
+        var email = document.forms['RegisterForm']['Email'].value;
+
+        if (!validateEmail(email)) {
+            alert('Please enter a valid email address.');
+            event.preventDefault();
+        }
+
+        if (!validatePassword(password.value) || !validateConfirmPasswordLive()) {
+            alert('Please fix the errors in your password fields.');
+            event.preventDefault();
+        }
+    });
+
+    function validateEmail(email) {
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    function validatePassword(password) {
+        var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        return re.test(password);
+    }
+
+    function validatePasswordLive() {
+        var message = '';
+        if (!validatePassword(password.value)) {
+            message = 'Password must be at least 8 characters long, contain a number, and a capital letter.';
+        }
+        document.getElementById('passwordHelp').innerText = message;
+    }
+
+    function validateConfirmPasswordLive() {
+        var message = '';
+        if (password.value !== confirmPassword.value) {
+            message = 'Passwords do not match.';
+        }
+        document.getElementById('confirmPasswordHelp').innerText = message;
+        return password.value === confirmPassword.value;
+    }
+});
+</script>
+";
+    }
+
+    @Html.Raw(script)
+
+
+
+
+
 </body>
 </html>
-

@@ -56,6 +56,55 @@ namespace eUseControl.BusinessLogic.Core
             return new ULoginResp { Status = true, Level = userRole };
         }
 
+        internal ULoginResp UserRegisterAction(UserRegister data)
+        {
+            var validate = new EmailAddressAttribute();
+            if (!validate.IsValid(data.Email))
+            {
+                return new ULoginResp { Status = false, StatusMsg = "Invalid email address." };
+            }
+
+            var pass = LoginHelper.HashGen(data.Password);
+            using (var db = new UserContext())
+            {
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        // Check if the email is already in use
+                        var existingUser = db.Users.FirstOrDefault(u => u.Email == data.Email);
+                        if (existingUser != null)
+                        {
+                            return new ULoginResp { Status = false, StatusMsg = "Email is already in use." };
+                        }
+
+                        // Create a new user entry
+                        var newUser = new ULoginData
+                        {
+                            Username = data.Email,
+                            Email = data.Email,
+                            Password = pass,
+                            LastLogin = DateTime.Now,
+                            LasIp = data.LoginIp,
+                            Level = URole.User // Setting default user level here
+                        };
+
+                        db.Users.Add(newUser);
+                        db.SaveChanges();
+                        transaction.Commit();
+
+                        return new ULoginResp { Status = true, Level = URole.User, StatusMsg = "Registration successful." };
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        // Log exception details here using your preferred logging framework
+                        return new ULoginResp { Status = false, StatusMsg = "Registration failed due to a server error." };
+                    }
+                }
+            }
+        }
+
 
         internal HttpCookie Cookie(string loginCredential)
     {

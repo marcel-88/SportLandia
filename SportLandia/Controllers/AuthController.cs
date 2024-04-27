@@ -11,20 +11,20 @@ using eUseControl.Domain.Entities.User;
 
 namespace TW_WebSite.Controllers
 {
-    public class LoginController : Controller
+    public class AuthController : Controller
     {
         private readonly ISession _session;
 
-        public LoginController()
+        public AuthController()
         {
             var bl = new BusinessLogic();
             _session = bl.GetSessionBL();
         }
 
         public ActionResult Login()
-{
-    return View("~/Views/Auth/Login.cshtml");
-}
+        {
+            return View();
+        }
 
 
         [HttpPost]
@@ -72,8 +72,41 @@ namespace TW_WebSite.Controllers
 
         public ActionResult Register()
         {
-            return View("~/Views/Auth/Register.cshtml");
+            return View();
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(UserRegister register)
+        {
+            if (ModelState.IsValid)
+            {
+                UserRegister data = new UserRegister
+                {
+                    Email = register.Email,
+                    Username = register.Email,
+                    Password = register.Password,
+                    LoginIp = Request.UserHostAddress,
+                    LoginDateTime = DateTime.Now,
+                    Role = URole.User,
+                };
+
+            var userRegister = _session.UserRegister(data);
+                 if (userRegister.Status)
+                 {
+                    ViewBag.Status = "Succes";
+                       return RedirectToAction("Index", "Home");
+                 } else
+                {
+                    ViewBag.Status = "Insucces";
+                    return View("Register");
+                }
+
+            }
+
+            
+            return View("Register");
+        }
+
     }
 
 }

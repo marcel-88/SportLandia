@@ -23,7 +23,7 @@
 
                             <h3 class="mb-5">Login</h3>
 
-                            @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-signin", @id = "LoginForm" }))
+                            @using (Html.BeginForm("Index", "Auth", FormMethod.Post, new { @class = "form-signin", @id = "LoginForm" }))
                             {
                                 @Html.AntiForgeryToken()
 
