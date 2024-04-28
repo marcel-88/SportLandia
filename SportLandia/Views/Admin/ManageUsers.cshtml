@@ -1,0 +1,91 @@
+﻿@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+    ViewBag.Title = "Manage Users";
+}
+
+@using eUseControl.Domain
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<h2>AAAA</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Last Login</th>
+            <th>Last IP</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.Users != null)
+        {
+            foreach (var user in ViewBag.Users)
+            {
+                <tr>
+                    <form action="@Url.Action("UpdateUser", "Admin")" method="post">
+                        @Html.AntiForgeryToken()
+                    <td><input type="text" name="Username" value="@user.Username" /></td>
+                    <td><input type="email" name="Email" value="@user.Email" /></td>
+                    <td><input type="password" name="Password"/></td>
+                    <td><input type="date" name="LastLogin" value="@user.LastLogin.ToString("yyyy-MM-dd")" /></td>
+                    <td><input type="text" name="LasIp" value="@user.LasIp" /></td>
+                    <td>
+                        <select name="Level">
+                            @foreach (var role in Enum.GetValues(typeof(URole)))
+                            {
+                                var roleEnum = (URole)role;
+                                <option value="@((int)roleEnum)" @(user.Level == roleEnum ? "selected" : "")>@roleEnum</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <input type="hidden" name="Id" value="@user.Id" />
+                        <input type="submit" value="Update" />
+                        <button type="button" onclick="deleteUser(@user.Id)">Delete</button>
+                    </td>
+                    </form>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">No users found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+    function deleteUser(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+        var form = document.createElement('form');
+        document.body.appendChild(form);
+        form.method = 'post';
+        form.action = '/Admin/DeleteUser';
+
+        var idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'Id';
+        idInput.value = userId;
+        form.appendChild(idInput);
+
+        var token = document.createElement('input');
+        token.type = 'hidden';
+        token.name = '__RequestVerificationToken';
+        token.value = '@Html.AntiForgeryToken()';
+        form.appendChild(token);
+
+        form.submit();
+    }
+}
+
+</script>
