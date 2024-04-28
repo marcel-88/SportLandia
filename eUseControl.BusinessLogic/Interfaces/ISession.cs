@@ -1,5 +1,6 @@
 ﻿using eUseControl.Domain.Entities.User;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,8 @@ namespace eUseControl.BusinessLogic.Interfaces
         ULoginResp UserRegister(UserRegister data);
         HttpCookie GenCookie(string loginCredential);
         UserMinimal GetUserByCookie(string apiCookieValue);
+        bool UpdateUser(ULoginData user);
+        void DeleteUser(int userId);
+        List<ULoginData> GetAllUsers();
     }
 }

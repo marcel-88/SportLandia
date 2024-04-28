@@ -1,9 +1,15 @@
 ﻿using eUseControl.BusinessLogic.Core;
+using eUseControl.BusinessLogic.DBModel;
 using eUseControl.BusinessLogic.Interfaces;
 using eUseControl.Domain.Entities.User;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+<<<<<<< Updated upstream
 using System.Data.Common;
+=======
+using System.Data.Entity;
+>>>>>>> Stashed changes
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,5 +38,23 @@ namespace eUseControl.BusinessLogic
         {
             return UserCookie(apiCookieValue);
         }
+
+        public bool UpdateUser(ULoginData user)
+        {
+            var adminApi = new AdminApi();
+            return adminApi.UpdateUserDetails(user);
+        }
+
+        public void DeleteUser(int userId)
+        {
+            var adminApi = new AdminApi();
+            adminApi.DeleteUser(userId);
+        }
+        public List<ULoginData> GetAllUsers()
+        {
+            var adminApi = new AdminApi();
+            return adminApi.FetchAllUsers();
+        }
     }
 }
+
