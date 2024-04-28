@@ -11,6 +11,7 @@ namespace eUseControl.BusinessLogic.Interfaces
     public interface ISession
     {
         ULoginResp UserLogin(UserLogin data);
+        ULoginResp UserRegister(UserRegister data);
         HttpCookie GenCookie(string loginCredential);
         UserMinimal GetUserByCookie(string apiCookieValue);
     }
