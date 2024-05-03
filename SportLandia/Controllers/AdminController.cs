@@ -41,7 +41,6 @@ namespace TW_WebSite.Controllers
                     {
                         foreach (var error in entry.Value.Errors)
                         {
-                            // Log these details to your logging framework or debug output
                             System.Diagnostics.Debug.WriteLine($"{entry.Key}: {error.ErrorMessage}");
                         }
                     }
@@ -50,7 +49,6 @@ namespace TW_WebSite.Controllers
 
             if (ModelState.IsValid)
             {
-                /*return RedirectToAction("AdminChangeProducts");*/
                 bool updateResult = _session.UpdateUser(user);
                 if (updateResult)
                 {
@@ -63,7 +61,6 @@ namespace TW_WebSite.Controllers
                 }
             }
 
-            // If model state is invalid, log or display the errors
             var errorMessages = new List<string>();
             foreach (var entry in ModelState)
             {
@@ -73,7 +70,6 @@ namespace TW_WebSite.Controllers
                 }
             }
 
-            // Optionally log these errors
             TempData["ErrorMessages"] = errorMessages;
 
             var users = _session.GetAllUsers();
