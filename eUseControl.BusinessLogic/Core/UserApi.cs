@@ -106,34 +106,32 @@ namespace eUseControl.BusinessLogic.Core
         }
 
 
-        internal HttpCookie Cookie(string loginCredential)
+    internal HttpCookie Cookie(string loginCredential)
     {
-      var apiCookie = new HttpCookie("X-KEY")
+      Session curent;
+      HttpCookie apiCookie = new HttpCookie("X-KEY")
       {
         Value = CookieGenerator.Create(loginCredential)
       };
-
       using (var db = new SessionContext())
       {
-        Session curent;
+        curent = new Session();
         var validate = new EmailAddressAttribute();
         if (validate.IsValid(loginCredential))
         {
-          curent = (from e in db.Sessions where e.Username == loginCredential select e).FirstOrDefault();
-        }
-        else
-        {
-          curent = (from e in db.Sessions where e.Username == loginCredential select e).FirstOrDefault();
-        }
+          curent.CookieString = (from e in db.Sessions where e.Username == loginCredential select e.CookieString).FirstOrDefault();
+          HttpCookie cookie = new HttpCookie("X-KEY", curent.CookieString);
+          return cookie;
 
-        if (curent != null)
-        {
-          curent.CookieString = apiCookie.Value;
-          curent.ExpireTime = DateTime.Now.AddMinutes(60);
-          using (var todo = new SessionContext())
+          if (curent != null)
           {
-            todo.Entry(curent).State = EntityState.Modified;
-            todo.SaveChanges();
+            curent.CookieString = apiCookie.Value;
+            curent.ExpireTime = DateTime.Now.AddMinutes(60);
+            using (var todo = new SessionContext())
+            {
+              todo.Entry(curent).State = EntityState.Modified;
+              todo.SaveChanges();
+            }
           }
         }
         else
@@ -161,6 +159,8 @@ namespace eUseControl.BusinessLogic.Core
         session = db.Sessions.FirstOrDefault(s => s.CookieString == cookie && s.ExpireTime > DateTime.Now);
       }
 
+      // System.Diagnostics.Debug.WriteLine("1"+session.ToString());
+
       if (session == null) return null;
       using (var db = new UserContext())
       {
@@ -174,6 +174,8 @@ namespace eUseControl.BusinessLogic.Core
           curentUser = db.Users.FirstOrDefault(u => u.Username == session.Username);
         }
       }
+
+      // System.Diagnostics.Debug.WriteLine("2"+curentUser.ToString());
 
       if (curentUser == null) return null;
       // Assuming you've configured AutoMapper somewhere during application startup

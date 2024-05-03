@@ -5,11 +5,8 @@ using eUseControl.Domain.Entities.User;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-<<<<<<< Updated upstream
 using System.Data.Common;
-=======
 using System.Data.Entity;
->>>>>>> Stashed changes
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
