@@ -44,6 +44,25 @@ namespace TW_WebSite.Controllers
                 var userLogin = _session.UserLogin(data);
                 if (userLogin.Status)
                 {
+                    // Generate session token
+                    var sessionToken = _session.GenCookie(login.Credential);
+
+                    // Set session token cookie
+                    Response.Cookies.Add(sessionToken);
+
+          System.Diagnostics.Debug.WriteLine(sessionToken);
+
+          if (Request.Cookies["X-KEY"] != null)
+          {
+            var token = Request.Cookies["X-KEY"].Value;
+            var userMinimal = _session.GetUserByCookie(token);
+            System.Diagnostics.Debug.WriteLine(token.ToString());
+          }
+          else
+          {
+            return RedirectToAction("Login", "Account");
+          }
+
                     if (userLogin.Level == URole.Admin)
                     {
                         return RedirectToAction("AdminChangeProducts", "Admin");
