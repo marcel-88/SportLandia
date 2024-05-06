@@ -56,7 +56,7 @@ namespace TW_WebSite.Controllers
           {
             var token = Request.Cookies["X-KEY"].Value;
             var userMinimal = _session.GetUserByCookie(token);
-            System.Diagnostics.Debug.WriteLine(token.ToString());
+            System.Diagnostics.Debug.WriteLine(userMinimal.Username);
           }
           else
           {
