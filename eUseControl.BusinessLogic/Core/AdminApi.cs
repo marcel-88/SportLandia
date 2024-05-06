@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using eUseControl.Helpers;
 
 namespace eUseControl.BusinessLogic.Core
 {
@@ -20,7 +21,7 @@ namespace eUseControl.BusinessLogic.Core
                 {
                     existingUser.Username = userData.Username;
                     existingUser.Email = userData.Email;
-                    existingUser.Password = userData.Password;
+                    existingUser.Password = LoginHelper.HashGen(userData.Password);
                     existingUser.LastLogin = userData.LastLogin;
                     existingUser.LasIp = userData.LasIp;
                     existingUser.Level = userData.Level;
@@ -33,7 +34,6 @@ namespace eUseControl.BusinessLogic.Core
                     }
                     catch (Exception ex)
                     {
-                        // Log the exception or handle it as needed
                         Console.WriteLine($"An error occurred: {ex.Message}");
                         return false;
                     }

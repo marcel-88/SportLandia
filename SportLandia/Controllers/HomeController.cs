@@ -45,9 +45,9 @@ namespace TW_WebSite.Controllers
 
         public ActionResult UProfile()
         {
-            var cookie = Request.Cookies["X-KEY"].Value;
-            if (cookie != null)
+            if (Request.Cookies["X-KEY"] != null)
             {
+                var cookie = Request.Cookies["X-KEY"].Value;
                 var session = _session.GetUserByCookie(cookie);
                 if (session != null)  // && session.ExpireTime > DateTime.Now
                 {

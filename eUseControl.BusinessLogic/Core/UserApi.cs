@@ -105,6 +105,21 @@ namespace eUseControl.BusinessLogic.Core
             }
         }
 
+        public bool UpdateUserPassword(string username, string oldPassword, string newPassword)
+        {
+            using (var db = new UserContext())
+            {
+                var user = db.Users.FirstOrDefault(u => u.Username == username);
+                if (user != null && user.Password == LoginHelper.HashGen(oldPassword))
+                {
+                    user.Password = LoginHelper.HashGen(newPassword);
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+        }
+
     internal HttpCookie Cookie(string loginCredential)
     {
       using (var db = new SessionContext())

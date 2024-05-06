@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\User\Session.cs" />
+    <Compile Include="Entities\User\PasswordChangeModel.cs" />
     <Compile Include="Entities\User\UserMinimal.cs" />
     <Compile Include="Entities\User\UserRegister.cs" />
     <Compile Include="URole.cs" />

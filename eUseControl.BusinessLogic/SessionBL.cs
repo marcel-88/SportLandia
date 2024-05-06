@@ -36,6 +36,11 @@ namespace eUseControl.BusinessLogic
             return UserCookie(apiCookieValue);
         }
 
+        public bool ChangeUserPassword(string username, string oldPassword, string newPassword)
+        {
+            return UpdateUserPassword(username, oldPassword, newPassword);
+        }
+
         public bool UpdateUser(ULoginData user)
         {
             var adminApi = new AdminApi();
