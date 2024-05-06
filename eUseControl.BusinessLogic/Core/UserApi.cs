@@ -105,49 +105,44 @@ namespace eUseControl.BusinessLogic.Core
             }
         }
 
-
     internal HttpCookie Cookie(string loginCredential)
     {
-      Session curent;
-      HttpCookie apiCookie = new HttpCookie("X-KEY")
-      {
-        Value = CookieGenerator.Create(loginCredential)
-      };
       using (var db = new SessionContext())
       {
-        curent = new Session();
         var validate = new EmailAddressAttribute();
         if (validate.IsValid(loginCredential))
         {
-          curent.CookieString = (from e in db.Sessions where e.Username == loginCredential select e.CookieString).FirstOrDefault();
-          HttpCookie cookie = new HttpCookie("X-KEY", curent.CookieString);
-          return cookie;
-
-          if (curent != null)
+          var curent = db.Sessions.FirstOrDefault(e => e.Username == loginCredential && e.ExpireTime > DateTime.Now);
+          if (curent == null)
           {
-            curent.CookieString = apiCookie.Value;
-            curent.ExpireTime = DateTime.Now.AddMinutes(60);
-            using (var todo = new SessionContext())
+            var apiCookie = new HttpCookie("X-KEY")
             {
-              todo.Entry(curent).State = EntityState.Modified;
-              todo.SaveChanges();
-            }
+              Value = CookieGenerator.Create(loginCredential)
+            };
+            curent = new Session
+            {
+              Username = loginCredential,
+              CookieString = apiCookie.Value,
+              ExpireTime = DateTime.Now.AddMinutes(60)
+            };
+            db.Sessions.Add(curent);
+            db.SaveChanges();
+            return apiCookie;
+          }
+          else
+          {
+            return new HttpCookie("X-KEY", curent.CookieString);
           }
         }
         else
         {
-          db.Sessions.Add(new Session
-          {
-            Username = loginCredential,
-            CookieString = apiCookie.Value,
-            ExpireTime = DateTime.Now.AddMinutes(60)
-          });
-          db.SaveChanges();
+          // Handle invalid email address
+          // For example, throw an exception or return a default cookie
+          throw new ArgumentException("Invalid email address.");
         }
       }
-
-      return apiCookie;
     }
+
 
     internal UserMinimal UserCookie(string cookie)
     {
