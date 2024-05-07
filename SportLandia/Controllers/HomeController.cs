@@ -45,7 +45,9 @@ namespace TW_WebSite.Controllers
 
         public ActionResult UProfile()
         {
-            if (Request.Cookies["X-KEY"] != null)
+            var token = Request.Cookies["X-KEY"].Value;
+
+            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
             {
                 var cookie = Request.Cookies["X-KEY"].Value;
                 var session = _session.GetUserByCookie(cookie);
@@ -76,26 +78,43 @@ namespace TW_WebSite.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                System.Diagnostics.Debug.WriteLine("Everything is not ok, invalid model !!!");
+                return View("UProfile", model);
             }
 
-            var user = HttpContext.User.Identity.Name;
+            var user = "";
+
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var userMinimal = _session.GetUserByCookie(token);
+                user = userMinimal.Username;
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            System.Diagnostics.Debug.WriteLine("User", user);
             if (user == null)
             {
+                System.Diagnostics.Debug.WriteLine("User not recognized");
                 ModelState.AddModelError("", "User not recognized.");
-                return View(model);
+                return View("UProfile", model);
             }
 
             bool result = _session.ChangeUserPassword(user, model.OldPassword, model.NewPassword);
             if (result)
             {
+                System.Diagnostics.Debug.WriteLine("Password updated");
                 TempData["Message"] = "Password successfully updated.";
                 return RedirectToAction("UProfile");
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("Old password is incorrext or update failed");
                 ModelState.AddModelError("", "The old password is incorrect or update failed.");
-                return View(model);
+                return View("UProfile", model);
             }
         }
 

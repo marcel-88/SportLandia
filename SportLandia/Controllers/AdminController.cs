@@ -21,60 +21,87 @@ namespace TW_WebSite.Controllers
         // GET: Admin
         public ActionResult AdminChangeProducts()
         {
-            return View();
+            var token = Request.Cookies["X-KEY"].Value;
+
+            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
+            {
+                return View();
+            }
+            else 
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
         public ActionResult ManageUsers()
         {
-            var model = _session.GetAllUsers();
-            ViewBag.Users = model ?? new List<ULoginData> ();
-            return View();
+            var token = Request.Cookies["X-KEY"].Value;
+
+            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
+            {
+                var model = _session.GetAllUsers();
+                ViewBag.Users = model ?? new List<ULoginData>();
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         [HttpPost]
         public ActionResult UpdateUser(ULoginData user)
         {
-            if (!ModelState.IsValid)
+            var token = Request.Cookies["X-KEY"].Value;
+
+            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
             {
-                foreach (var entry in ModelState)
+                if (!ModelState.IsValid)
                 {
-                    if (entry.Value.Errors.Any())
+                    foreach (var entry in ModelState)
                     {
-                        foreach (var error in entry.Value.Errors)
+                        if (entry.Value.Errors.Any())
                         {
-                            System.Diagnostics.Debug.WriteLine($"{entry.Key}: {error.ErrorMessage}");
+                            foreach (var error in entry.Value.Errors)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"{entry.Key}: {error.ErrorMessage}");
+                            }
                         }
                     }
                 }
-            }
 
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    bool updateResult = _session.UpdateUser(user);
+                    if (updateResult)
+                    {
+                        TempData["Message"] = "User updated successfully.";
+                        return RedirectToAction("ManageUsers");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Failed to update user.");
+                    }
+                }
+
+                var errorMessages = new List<string>();
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        errorMessages.Add($"{entry.Key}: {error.ErrorMessage}");
+                    }
+                }
+
+                TempData["ErrorMessages"] = errorMessages;
+
+                var users = _session.GetAllUsers();
+                ViewBag.Users = users ?? new List<ULoginData>();
+                return View("ManageUsers");
+            }
+            else
             {
-                bool updateResult = _session.UpdateUser(user);
-                if (updateResult)
-                {
-                    TempData["Message"] = "User updated successfully.";
-                    return RedirectToAction("ManageUsers");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Failed to update user.");
-                }
+                return RedirectToAction("Login", "Auth");
             }
-
-            var errorMessages = new List<string>();
-            foreach (var entry in ModelState)
-            {
-                foreach (var error in entry.Value.Errors)
-                {
-                    errorMessages.Add($"{entry.Key}: {error.ErrorMessage}");
-                }
-            }
-
-            TempData["ErrorMessages"] = errorMessages;
-
-            var users = _session.GetAllUsers();
-            ViewBag.Users = users ?? new List<ULoginData>();
-            return View("ManageUsers");
         }
 
 

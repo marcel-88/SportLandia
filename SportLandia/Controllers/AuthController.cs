@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Web.SessionState;
 using eUseControl.BusinessLogic;
 using eUseControl.BusinessLogic.Interfaces;
@@ -25,6 +26,23 @@ namespace TW_WebSite.Controllers
         {
             return View();
         }
+
+        public ActionResult Logout()
+        {
+
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var c = new HttpCookie("X-KEY");
+                c.Value = null;
+                Response.Cookies.Add(c);
+            }
+
+            Session.Clear();
+            FormsAuthentication.SignOut();
+
+            return RedirectToAction("Login", "Auth");
+        }
+
 
 
         [HttpPost]
@@ -50,18 +68,20 @@ namespace TW_WebSite.Controllers
                     // Set session token cookie
                     Response.Cookies.Add(sessionToken);
 
-          System.Diagnostics.Debug.WriteLine(sessionToken);
+                      System.Diagnostics.Debug.WriteLine(sessionToken);
 
-          if (Request.Cookies["X-KEY"] != null)
-          {
-            var token = Request.Cookies["X-KEY"].Value;
-            var userMinimal = _session.GetUserByCookie(token);
-            System.Diagnostics.Debug.WriteLine(userMinimal.Username);
-          }
-          else
-          {
-            return RedirectToAction("Login", "Account");
-          }
+                      if (Request.Cookies["X-KEY"] != null)
+                      {
+                        var token = Request.Cookies["X-KEY"].Value;
+                        System.Diagnostics.Debug.WriteLine(token);
+                        var userMinimal = _session.GetUserByCookie(token);
+                        ViewBag.Username = userMinimal.Username;
+                        System.Diagnostics.Debug.WriteLine(userMinimal.Username);
+                      }
+                      else
+                      {
+                        return RedirectToAction("Login", "Account");
+                      }
 
                     if (userLogin.Level == URole.Admin)
                     {
