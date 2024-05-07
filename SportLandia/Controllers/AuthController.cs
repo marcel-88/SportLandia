@@ -74,7 +74,7 @@ namespace TW_WebSite.Controllers
                       {
                         var token = Request.Cookies["X-KEY"].Value;
                         System.Diagnostics.Debug.WriteLine(token);
-                        var userMinimal = _session.GetUserByCookie(token);
+                        UserMinimal userMinimal = _session.GetUserByCookie(token);
                         ViewBag.Username = userMinimal.Username;
                         System.Diagnostics.Debug.WriteLine(userMinimal.Username);
                       }
