@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using eUseControl.Helpers;
+using eUseControl.Domain.Entities.Product;
 
 namespace eUseControl.BusinessLogic.Core
 {
@@ -60,6 +61,63 @@ namespace eUseControl.BusinessLogic.Core
             using (var db = new UserContext())
             {
                 return db.Users.ToList();
+            }
+        }
+
+        public List<Product> FetchAllProducts()
+        {
+            using (var _db = new ProductContext())
+            {
+                return _db.Products.ToList();
+            }
+        }
+
+        public Product GetProductById(int productId)
+        {
+            using (var _db = new ProductContext())
+            {
+                return _db.Products.FirstOrDefault(p => p.Id == productId);
+            }
+        }
+
+        public bool AddProduct(Product product)
+        {
+            using (var _db = new ProductContext())
+            {
+                _db.Products.Add(product);
+                return _db.SaveChanges() > 0; // SaveChanges returns the number of objects written to the database
+            }
+        }
+
+        public bool UpdateProductDetails(Product product)
+        {
+            using (var _db = new ProductContext())
+            {
+                var existingProduct = _db.Products.FirstOrDefault(p => p.Id == product.Id);
+                if (existingProduct != null)
+                {
+                    existingProduct.Name = product.Name;
+                    existingProduct.Price = product.Price;
+                    existingProduct.Description = product.Description;
+                    existingProduct.Category = product.Category;
+                    _db.Entry(existingProduct).State = EntityState.Modified;
+                    return _db.SaveChanges() > 0;
+                }
+                return false;
+            }
+        }
+
+        public bool DeleteProduct(int productId)
+        {
+            using (var _db = new ProductContext())
+            {
+                var product = _db.Products.Find(productId);
+                if (product != null)
+                {
+                    _db.Products.Remove(product);
+                    return _db.SaveChanges() > 0;
+                }
+                return false;
             }
         }
     }

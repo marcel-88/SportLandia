@@ -1,4 +1,5 @@
-﻿using eUseControl.Domain.Entities.User;
+﻿using eUseControl.Domain.Entities.Product;
+using eUseControl.Domain.Entities.User;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,5 +22,11 @@ namespace eUseControl.BusinessLogic.Interfaces
         bool UpdateUser(ULoginData user);
         void DeleteUser(int userId);
         List<ULoginData> GetAllUsers();
+
+        List<Product> GetAllProducts();
+        Product GetProductById(int productId);
+        bool CreateProduct(Product product);
+        bool UpdateProduct(Product product);
+        bool DeleteProduct(int productId);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using eUseControl.BusinessLogic.Core;
 using eUseControl.BusinessLogic.DBModel;
 using eUseControl.BusinessLogic.Interfaces;
+using eUseControl.Domain.Entities.Product;
 using eUseControl.Domain.Entities.User;
 using System;
 using System.Collections;
@@ -14,8 +15,12 @@ using System.Web;
 
 namespace eUseControl.BusinessLogic
 {
+
     public class SessionBL : UserApi, ISession
     {
+
+        private readonly AdminApi _adminApi = new AdminApi();
+
         public ULoginResp UserLogin(UserLogin data)
         {
             return UserLoginAction(data);
@@ -66,6 +71,32 @@ namespace eUseControl.BusinessLogic
         {
             var adminApi = new AdminApi();
             return adminApi.FetchAllUsers();
+        }
+
+
+        public List<Product> GetAllProducts()
+        {
+            return _adminApi.FetchAllProducts();
+        }
+
+        public Product GetProductById(int productId)
+        {
+            return _adminApi.GetProductById(productId);
+        }
+
+        public bool CreateProduct(Product product)
+        {
+            return _adminApi.AddProduct(product);
+        }
+
+        public bool UpdateProduct(Product product)
+        {
+            return _adminApi.UpdateProductDetails(product);
+        }
+
+        public bool DeleteProduct(int productId)
+        {
+            return _adminApi.DeleteProduct(productId);
         }
     }
 }

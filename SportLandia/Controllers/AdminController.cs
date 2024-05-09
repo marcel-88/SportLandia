@@ -8,6 +8,7 @@ using eUseControl.BusinessLogic.Interfaces;
 using eUseControl.BusinessLogic;
 using System.Net;
 using eUseControl.Domain;
+using eUseControl.Domain.Entities.Product;
 
 namespace TW_WebSite.Controllers
 {
@@ -134,9 +135,6 @@ namespace TW_WebSite.Controllers
         }
 
 
-
-
-
         [HttpPost]
         public ActionResult DeleteUser(int id)
         {
@@ -163,6 +161,52 @@ namespace TW_WebSite.Controllers
         public AdminController(ISession session)
         {
             _session = session;
+        }
+
+        public ActionResult Products()
+        {
+            var products = _session.GetAllProducts();
+            return View(products);
+        }
+
+        public ActionResult CreateProduct()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateProduct(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _session.CreateProduct(product);
+                return RedirectToAction("Products");
+            }
+            return View(product);
+        }
+
+        public ActionResult EditProduct(int id)
+        {
+            var product = _session.GetProductById(id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public ActionResult EditProduct(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _session.UpdateProduct(product);
+                return RedirectToAction("Products");
+            }
+            return View(product);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteProduct(int id)
+        {
+            _session.DeleteProduct(id);
+            return RedirectToAction("Products");
         }
     }
 }

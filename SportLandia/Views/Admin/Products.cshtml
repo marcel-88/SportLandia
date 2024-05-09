@@ -1,0 +1,39 @@
+﻿@using eUseControl.Domain.Entities.Product
+@model IEnumerable<Product>
+
+@{
+    ViewBag.Title = "Manage Products";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateProduct", "Admin", new { }, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Id)</td>
+            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.Price)</td>
+            <td>@Html.DisplayFor(modelItem => item.Category)</td>
+            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+            <td>
+                @Html.ActionLink("Edit", "EditProduct","Admin", new { id = item.Id }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Delete", "DeleteProduct", "Admin", new { id = item.Id }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this?');" })
+            </td>
+        </tr>
+    }
+</table>
