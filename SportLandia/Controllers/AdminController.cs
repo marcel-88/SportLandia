@@ -165,73 +165,193 @@ namespace TW_WebSite.Controllers
 
         public ActionResult Products()
         {
-            var products = _session.GetAllProductsIncludingCategories();
-            return View(products);
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    var products = _session.GetAllProductsIncludingCategories();
+                    return View(products);
+                }
+                else return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         public ActionResult CreateProduct()
         {
-            ViewBag.Categories = _session.GetAllCategories()
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    ViewBag.Categories = _session.GetAllCategories()
                 .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
                 .ToList();
-            return View();
+                    return View();
+                }
+                else return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         [HttpPost]
         public ActionResult CreateProduct(Product product)
         {
-            if (ModelState.IsValid)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                _session.CreateProduct(product);
-                return RedirectToAction("Products");
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        _session.CreateProduct(product);
+                        return RedirectToAction("Products");
+                    }
+                    ViewBag.Categories = new SelectList(_session.GetAllCategories(), "Id", "Name");
+                    return View(product);
+                }
+                else return RedirectToAction("Login", "Auth");
             }
-            ViewBag.Categories = new SelectList(_session.GetAllCategories(), "Id", "Name");
-            return View(product);
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         public ActionResult EditProduct(int id)
         {
-            var product = _session.GetProductById(id);
-            if (product == null)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                return HttpNotFound();
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    var product = _session.GetProductById(id);
+                    if (product == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    ViewBag.Categories = _session.GetAllCategories()
+                        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                        .ToList();
+                    return View(product);
+                }
+                else return RedirectToAction("Login", "Auth");
             }
-            ViewBag.Categories = _session.GetAllCategories()
-                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
-                .ToList();
-            return View(product);
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         [HttpPost]
         public ActionResult EditProduct(Product product)
         {
-            if (ModelState.IsValid)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                _session.UpdateProduct(product);
-                return RedirectToAction("Products");
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        _session.UpdateProduct(product);
+                        return RedirectToAction("Products");
+                    }
+                    ViewBag.Categories = new SelectList(_session.GetAllCategories(), "Id", "Name", product.CategoryId);
+                    return View(product);
+                }
+                else return RedirectToAction("Login", "Auth");
             }
-            ViewBag.Categories = new SelectList(_session.GetAllCategories(), "Id", "Name", product.CategoryId);
-            return View(product);
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         [HttpPost]
         public ActionResult DeleteProduct(int id)
         {
-            _session.DeleteProduct(id);
-            return RedirectToAction("Products");
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    _session.DeleteProduct(id);
+                    return RedirectToAction("Products");
+                }
+                else return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
 
         public ActionResult Categories()
         {
-            var categories = _session.GetAllCategories();
-            return View(categories);
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    var categories = _session.GetAllCategories();
+                    return View(categories);
+                }
+                else return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         // Create Category - GET
         public ActionResult CreateCategory()
         {
-            return View();
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    return View();
+                }
+                else return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         // Create Category - POST
@@ -239,23 +359,53 @@ namespace TW_WebSite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateCategory(Category category)
         {
-            if (ModelState.IsValid)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                _session.CreateCategory(category);
-                return RedirectToAction("Categories");
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        _session.CreateCategory(category);
+                        return RedirectToAction("Categories");
+                    }
+                    return View(category);
+                }
+                else return RedirectToAction("Login", "Auth");
             }
-            return View(category);
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         // Edit Category - GET
         public ActionResult EditCategory(int id)
         {
-            var category = _session.GetCategoryById(id);
-            if (category == null)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                return HttpNotFound();
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    var category = _session.GetCategoryById(id);
+                    if (category == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(category);
+                }
+                else return RedirectToAction("Login", "Auth");
             }
-            return View(category);
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         // Edit Category - POST
@@ -263,20 +413,50 @@ namespace TW_WebSite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditCategory(Category category)
         {
-            if (ModelState.IsValid)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                _session.UpdateCategory(category);
-                return RedirectToAction("Categories");
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        _session.UpdateCategory(category);
+                        return RedirectToAction("Categories");
+                    }
+                    return View(category);
+                }
+                else return RedirectToAction("Login", "Auth");
             }
-            return View(category);
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         // Delete Category
         [HttpPost]
         public ActionResult DeleteCategory(int id)
         {
-            _session.DeleteCategory(id);
-            return RedirectToAction("Categories");
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    _session.DeleteCategory(id);
+                    return RedirectToAction("Categories");
+                }
+                else return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
     }
 }
