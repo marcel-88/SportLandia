@@ -16,7 +16,14 @@
                         <div class="col-md-4">
                             <div class="card mb-4 product-wap rounded-0">
                                 <div class="card rounded-0">
-                                    <img class="card-img rounded-0 img-fluid" src="@Url.Content(item.ImagePath)">
+                                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                                    {
+                                        <img class="card-img rounded-0 img-fluid" src="@Url.Content(item.ImagePath)" alt="Product Image">
+                                    }
+                                    else
+                                    {
+                                        <img class="card-img rounded-0 img-fluid" src="@Url.Content("~/images/default-image.jpg")" alt="Default Image">
+                                    }
                                     <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                         <ul class="list-unstyled">
                                             <li><a href="@Url.Action("ShopSingle", "Home", new { id = item.Id })" class="nav-link"><i class="far fa-heart"></i></a></li>
@@ -29,6 +36,7 @@
                                     <a href="@Url.Action("ShopSingle", "Home", new { id = item.Id })" class="h3 text-decoration-none">@item.Name</a>
                                     <ul class="w-100 list-unstyled d-flex justify-content-between mb-1">
                                         <li class="pt-2">
+                                            <!-- Here you can dynamically set color dots based on some product attribute if necessary -->
                                             <span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
                                             <span class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
                                         </li>
@@ -38,6 +46,7 @@
                             </div>
                         </div>
                     }
+
                 </div>
             </div>
         </div>
