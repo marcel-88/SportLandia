@@ -47,11 +47,13 @@ namespace TW_WebSite.Controllers
         {
             var token = Request.Cookies["X-KEY"].Value;
 
-            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
+            if (Request.Cookies["X-KEY"] != null)
             {
                 var cookie = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
                 var session = _session.GetUserByCookie(cookie);
-                if (session != null)  // && session.ExpireTime > DateTime.Now
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now)
                 {
                     ViewBag.Username = session.Username;
                     return View(new PasswordChangeModel());

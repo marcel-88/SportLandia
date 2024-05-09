@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using eUseControl.Domain;
+using System.Net;
 
 namespace eUseControl.BusinessLogic.Core
 {
@@ -181,6 +182,38 @@ namespace eUseControl.BusinessLogic.Core
       }
     }
 
+        internal Session GetSession(string token)
+        {
+            using (var sessionDb = new SessionContext())
+            {
+                Session session = sessionDb.Sessions.FirstOrDefault(s => (s.CookieString == token));
+
+                return session;
+            }
+        }
+
+        internal void LogoutUser(string token, HttpContextBase httpContext)
+        {
+            using (var sessionDb = new SessionContext())
+            {
+                Session session = sessionDb.Sessions.FirstOrDefault(s => (s.CookieString == token));
+                if(session != null)
+                {
+                    session.ExpireTime = DateTime.Now.AddDays(-1);
+                    sessionDb.SaveChanges();
+                }
+            }
+            if (httpContext.Request.Cookies["X-KEY"] != null)
+            {
+                var cookie = new HttpCookie("X-KEY")
+                {
+                    Expires = DateTime.Now.AddDays(-1),
+                    HttpOnly = true
+                };
+                httpContext.Response.Cookies.Add(cookie);
+            }
+
+        }
 
         internal UserMinimal UserCookie(string cookie)
         {
@@ -189,7 +222,7 @@ namespace eUseControl.BusinessLogic.Core
                 DateTime cc = DateTime.Now;
                 System.Diagnostics.Debug.WriteLine("string Cookie: " + cookie);
                 Session session = sessionDb.Sessions.FirstOrDefault(s => (s.CookieString == cookie) && (s.ExpireTime > cc));
-                System.Diagnostics.Debug.WriteLine("UserMinimal: " + cc + " " + session.CookieString + " " + cookie + " " + session.ExpireTime);
+                /*System.Diagnostics.Debug.WriteLine("UserMinimal: " + cc + " " + session.CookieString + " " + cookie + " " + session.ExpireTime);*/
                 if (session == null)
                 {
                     System.Diagnostics.Debug.WriteLine("Session not found or expired");

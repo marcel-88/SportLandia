@@ -32,9 +32,8 @@ namespace TW_WebSite.Controllers
 
             if (Request.Cookies["X-KEY"] != null)
             {
-                var c = new HttpCookie("X-KEY");
-                c.Value = null;
-                Response.Cookies.Add(c);
+                var token = Request.Cookies["X-KEY"].Value;
+                _session.LogoutUserByCookie(token, HttpContext);
             }
 
             Session.Clear();

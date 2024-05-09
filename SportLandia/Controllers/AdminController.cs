@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using eUseControl.Domain.Entities.User;
 using eUseControl.BusinessLogic.Interfaces;
 using eUseControl.BusinessLogic;
+using System.Net;
+using eUseControl.Domain;
 
 namespace TW_WebSite.Controllers
 {
@@ -21,26 +23,44 @@ namespace TW_WebSite.Controllers
         // GET: Admin
         public ActionResult AdminChangeProducts()
         {
-            var token = Request.Cookies["X-KEY"].Value;
-
-            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                return View();
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Auth");
+                }
             }
-            else 
+            else
             {
                 return RedirectToAction("Login", "Auth");
             }
         }
         public ActionResult ManageUsers()
         {
-            var token = Request.Cookies["X-KEY"].Value;
-
-            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                var model = _session.GetAllUsers();
-                ViewBag.Users = model ?? new List<ULoginData>();
-                return View();
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    var model = _session.GetAllUsers();
+                    ViewBag.Users = model ?? new List<ULoginData>();
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Auth");
+                }
             }
             else
             {
@@ -51,52 +71,61 @@ namespace TW_WebSite.Controllers
         [HttpPost]
         public ActionResult UpdateUser(ULoginData user)
         {
-            var token = Request.Cookies["X-KEY"].Value;
-
-            if (Request.Cookies["X-KEY"] != null && _session.GetUserByCookie(token) != null)
+            if (Request.Cookies["X-KEY"] != null)
             {
-                if (!ModelState.IsValid)
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
                 {
-                    foreach (var entry in ModelState)
+                    if (!ModelState.IsValid)
                     {
-                        if (entry.Value.Errors.Any())
+                        foreach (var entry in ModelState)
                         {
-                            foreach (var error in entry.Value.Errors)
+                            if (entry.Value.Errors.Any())
                             {
-                                System.Diagnostics.Debug.WriteLine($"{entry.Key}: {error.ErrorMessage}");
+                                foreach (var error in entry.Value.Errors)
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"{entry.Key}: {error.ErrorMessage}");
+                                }
                             }
                         }
                     }
-                }
 
-                if (ModelState.IsValid)
+                    if (ModelState.IsValid)
+                    {
+                        bool updateResult = _session.UpdateUser(user);
+                        if (updateResult)
+                        {
+                            TempData["Message"] = "User updated successfully.";
+                            return RedirectToAction("ManageUsers");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Failed to update user.");
+                        }
+                    }
+
+                    var errorMessages = new List<string>();
+                    foreach (var entry in ModelState)
+                    {
+                        foreach (var error in entry.Value.Errors)
+                        {
+                            errorMessages.Add($"{entry.Key}: {error.ErrorMessage}");
+                        }
+                    }
+
+                    TempData["ErrorMessages"] = errorMessages;
+
+                    var users = _session.GetAllUsers();
+                    ViewBag.Users = users ?? new List<ULoginData>();
+                    return View("ManageUsers");
+                }
+                else
                 {
-                    bool updateResult = _session.UpdateUser(user);
-                    if (updateResult)
-                    {
-                        TempData["Message"] = "User updated successfully.";
-                        return RedirectToAction("ManageUsers");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Failed to update user.");
-                    }
+                    return RedirectToAction("Login", "Auth");
                 }
-
-                var errorMessages = new List<string>();
-                foreach (var entry in ModelState)
-                {
-                    foreach (var error in entry.Value.Errors)
-                    {
-                        errorMessages.Add($"{entry.Key}: {error.ErrorMessage}");
-                    }
-                }
-
-                TempData["ErrorMessages"] = errorMessages;
-
-                var users = _session.GetAllUsers();
-                ViewBag.Users = users ?? new List<ULoginData>();
-                return View("ManageUsers");
             }
             else
             {
@@ -111,9 +140,26 @@ namespace TW_WebSite.Controllers
         [HttpPost]
         public ActionResult DeleteUser(int id)
         {
-            _session.DeleteUser(id);
-            return RedirectToAction("ManageUsers");
+            if (Request.Cookies["X-KEY"] != null)
+            {
+                var token = Request.Cookies["X-KEY"].Value;
+                var UserSession = _session.GetSessionByCookie(token);
+                var User = _session.GetUserByCookie(token);
+
+                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                {
+                    _session.DeleteUser(id);
+                    return RedirectToAction("ManageUsers");
+
+                }
+                else return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
+
         public AdminController(ISession session)
         {
             _session = session;

@@ -15,6 +15,8 @@ namespace eUseControl.BusinessLogic.Interfaces
         ULoginResp UserRegister(UserRegister data);
         HttpCookie GenCookie(string loginCredential);
         UserMinimal GetUserByCookie(string apiCookieValue);
+        Session GetSessionByCookie(string token);
+        void LogoutUserByCookie(string token, HttpContextBase httpContext);
         bool ChangeUserPassword(string username, string oldPassword, string newPassword);
         bool UpdateUser(ULoginData user);
         void DeleteUser(int userId);

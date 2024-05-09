@@ -36,6 +36,16 @@ namespace eUseControl.BusinessLogic
             return UserCookie(apiCookieValue);
         }
 
+        public Session GetSessionByCookie(string token)
+        {
+            return GetSession(token);
+        }
+
+        public void LogoutUserByCookie(string token, HttpContextBase httpContext)
+        {
+            LogoutUser(token, httpContext);
+        }
+
         public bool ChangeUserPassword(string username, string oldPassword, string newPassword)
         {
             return UpdateUserPassword(username, oldPassword, newPassword);
