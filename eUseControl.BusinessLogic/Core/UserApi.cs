@@ -166,8 +166,8 @@ namespace eUseControl.BusinessLogic.Core
 
       using (var db = new SessionContext())
       {
-        session = db.Sessions.FirstOrDefault(s => s.CookieString == cookie && s.ExpireTime > DateTime.Now);
-      }
+        session = db.Sessions.FirstOrDefault(s => s.CookieString == cookie); // && s.ExpireTime > DateTime.Now
+            }
 
       // System.Diagnostics.Debug.WriteLine("1"+session.ToString());
 
