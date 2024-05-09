@@ -80,6 +80,14 @@ namespace eUseControl.BusinessLogic.Core
             }
         }
 
+        public List<Product> GetAllProductsWithCategories()
+        {
+            using (var _db = new ProductContext())
+            {
+                return _db.Products.Include(p => p.Category).ToList();
+            }
+        }
+
         public bool AddProduct(Product product)
         {
             using (var _db = new ProductContext())
@@ -115,6 +123,60 @@ namespace eUseControl.BusinessLogic.Core
                 if (product != null)
                 {
                     _db.Products.Remove(product);
+                    return _db.SaveChanges() > 0;
+                }
+                return false;
+            }
+        }
+
+        public List<Category> FetchAllCategories()
+        {
+            using (var _db = new CategoryContext())
+            {
+                return _db.Categories.ToList();
+            }
+        }
+
+        public Category GetCategoryById(int categoryId)
+        {
+            using (var _db = new CategoryContext())
+            {
+                return _db.Categories.FirstOrDefault(c => c.Id == categoryId);
+            }
+        }
+
+        public bool AddCategory(Category category)
+        {
+            using (var _db = new CategoryContext())
+            {
+                _db.Categories.Add(category);
+                return _db.SaveChanges() > 0;
+            }
+        }
+
+        public bool UpdateCategoryDetails(Category category)
+        {
+            using (var _db = new CategoryContext())
+            {
+                var existingCategory = _db.Categories.Find(category.Id);
+                if (existingCategory != null)
+                {
+                    existingCategory.Name = category.Name;
+                    _db.Entry(existingCategory).State = EntityState.Modified;
+                    return _db.SaveChanges() > 0;
+                }
+                return false;
+            }
+        }
+
+        public bool DeleteCategory(int categoryId)
+        {
+            using (var _db = new CategoryContext())
+            {
+                var category = _db.Categories.Find(categoryId);
+                if (category != null)
+                {
+                    _db.Categories.Remove(category);
                     return _db.SaveChanges() > 0;
                 }
                 return false;

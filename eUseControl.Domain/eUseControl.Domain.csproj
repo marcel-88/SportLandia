@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Product\Category.cs" />
     <Compile Include="Entities\Product\Product.cs" />
     <Compile Include="Entities\User\Session.cs" />
     <Compile Include="Entities\User\PasswordChangeModel.cs" />

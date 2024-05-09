@@ -1,0 +1,39 @@
+﻿@using eUseControl.Domain.Entities.Product
+@model IEnumerable<Category>
+
+@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+    ViewBag.Title = "Manage Categories";
+}
+
+<h2>@ViewBag.Title</h2>
+<p>
+    @Html.ActionLink("Create New Category", "CreateCategory", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(model => category.Name)</td>
+                <td>
+                    <div class="btn-group">
+                        @Html.ActionLink("Edit", "EditCategory", "Admin", new { id = category.Id }, new { @class = "btn btn-success" })
+                        @using (Html.BeginForm("DeleteCategory", "Admin", new { id = category.Id }, FormMethod.Post, new { @class = "inline-form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

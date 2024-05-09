@@ -28,5 +28,12 @@ namespace eUseControl.BusinessLogic.Interfaces
         bool CreateProduct(Product product);
         bool UpdateProduct(Product product);
         bool DeleteProduct(int productId);
+        List<Product> GetAllProductsIncludingCategories();
+
+        List<Category> GetAllCategories();
+        Category GetCategoryById(int categoryId);
+        bool CreateCategory(Category category);
+        bool UpdateCategory(Category category);
+        bool DeleteCategory(int categoryId);
     }
 }

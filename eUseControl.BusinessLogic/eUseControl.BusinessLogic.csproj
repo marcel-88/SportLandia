@@ -58,10 +58,20 @@
     <Compile Include="BusinessLogic.cs" />
     <Compile Include="Core\AdminApi.cs" />
     <Compile Include="Core\UserApi.cs" />
+    <Compile Include="DBModel\CategoryContext.cs" />
     <Compile Include="DBModel\ProductContext.cs" />
     <Compile Include="DBModel\SessionContext.cs" />
     <Compile Include="DBModel\UserContext.cs" />
     <Compile Include="Interfaces\ISession.cs" />
+    <Compile Include="Migrations\202405091047558_InitialCreate.cs" />
+    <Compile Include="Migrations\202405091047558_InitialCreate.designer.cs">
+      <DependentUpon>202405091047558_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405091214580_SecondMigration.cs" />
+    <Compile Include="Migrations\202405091214580_SecondMigration.designer.cs">
+      <DependentUpon>202405091214580_SecondMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AutoMapper\AutoMapperConfig.cs" />
     <Compile Include="SessionBL.cs" />
@@ -82,6 +92,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DBModel\Seed\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202405091047558_InitialCreate.resx">
+      <DependentUpon>202405091047558_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405091214580_SecondMigration.resx">
+      <DependentUpon>202405091214580_SecondMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

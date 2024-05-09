@@ -98,6 +98,36 @@ namespace eUseControl.BusinessLogic
         {
             return _adminApi.DeleteProduct(productId);
         }
+
+        public List<Category> GetAllCategories()
+        {
+            return _adminApi.FetchAllCategories();
+        }
+
+        public Category GetCategoryById(int categoryId)
+        {
+            return _adminApi.GetCategoryById(categoryId);
+        }
+
+        public bool CreateCategory(Category category)
+        {
+            return _adminApi.AddCategory(category);
+        }
+
+        public bool UpdateCategory(Category category)
+        {
+            return _adminApi.UpdateCategoryDetails(category);
+        }
+
+        public bool DeleteCategory(int categoryId)
+        {
+            return _adminApi.DeleteCategory(categoryId);
+        }
+
+        public List<Product> GetAllProductsIncludingCategories()
+        {
+            return _adminApi.GetAllProductsWithCategories();
+        }
     }
 }
 

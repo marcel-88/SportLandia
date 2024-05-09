@@ -28,11 +28,17 @@
             <td>@Html.DisplayFor(modelItem => item.Id)</td>
             <td>@Html.DisplayFor(modelItem => item.Name)</td>
             <td>@Html.DisplayFor(modelItem => item.Price)</td>
-            <td>@Html.DisplayFor(modelItem => item.Category)</td>
+            <td>@(item.Category != null ? item.Category.Name : "No Category")</td>
             <td>@Html.DisplayFor(modelItem => item.Description)</td>
             <td>
-                @Html.ActionLink("Edit", "EditProduct","Admin", new { id = item.Id }, new { @class = "btn btn-success" })
-                @Html.ActionLink("Delete", "DeleteProduct", "Admin", new { id = item.Id }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this?');" })
+                <div class="btn-group">
+                    @Html.ActionLink("Edit", "EditProduct", "Admin", new { id = item.Id }, new { @class = "btn btn-success" })
+                    @using (Html.BeginForm("DeleteProduct", "Admin", new { id = item.Id }, FormMethod.Post, new { @class = "inline-form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
+                    }
+                </div>
             </td>
         </tr>
     }

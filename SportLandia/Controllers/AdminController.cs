@@ -165,12 +165,15 @@ namespace TW_WebSite.Controllers
 
         public ActionResult Products()
         {
-            var products = _session.GetAllProducts();
+            var products = _session.GetAllProductsIncludingCategories();
             return View(products);
         }
 
         public ActionResult CreateProduct()
         {
+            ViewBag.Categories = _session.GetAllCategories()
+                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                .ToList();
             return View();
         }
 
@@ -182,12 +185,20 @@ namespace TW_WebSite.Controllers
                 _session.CreateProduct(product);
                 return RedirectToAction("Products");
             }
+            ViewBag.Categories = new SelectList(_session.GetAllCategories(), "Id", "Name");
             return View(product);
         }
 
         public ActionResult EditProduct(int id)
         {
             var product = _session.GetProductById(id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Categories = _session.GetAllCategories()
+                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                .ToList();
             return View(product);
         }
 
@@ -199,6 +210,7 @@ namespace TW_WebSite.Controllers
                 _session.UpdateProduct(product);
                 return RedirectToAction("Products");
             }
+            ViewBag.Categories = new SelectList(_session.GetAllCategories(), "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -207,6 +219,64 @@ namespace TW_WebSite.Controllers
         {
             _session.DeleteProduct(id);
             return RedirectToAction("Products");
+        }
+
+
+        public ActionResult Categories()
+        {
+            var categories = _session.GetAllCategories();
+            return View(categories);
+        }
+
+        // Create Category - GET
+        public ActionResult CreateCategory()
+        {
+            return View();
+        }
+
+        // Create Category - POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCategory(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                _session.CreateCategory(category);
+                return RedirectToAction("Categories");
+            }
+            return View(category);
+        }
+
+        // Edit Category - GET
+        public ActionResult EditCategory(int id)
+        {
+            var category = _session.GetCategoryById(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+            return View(category);
+        }
+
+        // Edit Category - POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCategory(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                _session.UpdateCategory(category);
+                return RedirectToAction("Categories");
+            }
+            return View(category);
+        }
+
+        // Delete Category
+        [HttpPost]
+        public ActionResult DeleteCategory(int id)
+        {
+            _session.DeleteCategory(id);
+            return RedirectToAction("Categories");
         }
     }
 }
