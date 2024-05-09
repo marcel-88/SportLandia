@@ -38,5 +38,17 @@
         @Html.ValidationMessageFor(model => model.CategoryId)
     </div>
 
+    if (Model.ImagePath != null)
+    {
+        <div class="form-group">
+            <img src="@Url.Content(Model.ImagePath)" alt="Product Image" style="max-width: 100%; height: auto;" />
+        </div>
+    }
+
+    <div class="form-group">
+        <label for="image">Product Image</label>
+        <input type="file" name="image" />
+    </div>
+
     <button type="submit" class="btn btn-success">Update</button>
 }

@@ -15,6 +15,7 @@
 <table class="table">
     <tr>
         <th>Id</th>
+        <th>Image</th>
         <th>Name</th>
         <th>Price</th>
         <th>Category</th>
@@ -26,6 +27,9 @@
     {
         <tr>
             <td>@Html.DisplayFor(modelItem => item.Id)</td>
+            <td>
+                <img src="@Url.Content(item.ImagePath)" alt="Product Image" style="width: 100px; height: auto;" />
+            </td>
             <td>@Html.DisplayFor(modelItem => item.Name)</td>
             <td>@Html.DisplayFor(modelItem => item.Price)</td>
             <td>@(item.Category != null ? item.Category.Name : "No Category")</td>

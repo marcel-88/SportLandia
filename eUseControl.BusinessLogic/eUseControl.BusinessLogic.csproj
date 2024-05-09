@@ -71,6 +71,10 @@
     <Compile Include="Migrations\202405091214580_SecondMigration.designer.cs">
       <DependentUpon>202405091214580_SecondMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405091417518_ThirdMigration.cs" />
+    <Compile Include="Migrations\202405091417518_ThirdMigration.designer.cs">
+      <DependentUpon>202405091417518_ThirdMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AutoMapper\AutoMapperConfig.cs" />
@@ -99,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405091214580_SecondMigration.resx">
       <DependentUpon>202405091214580_SecondMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405091417518_ThirdMigration.resx">
+      <DependentUpon>202405091417518_ThirdMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

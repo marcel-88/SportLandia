@@ -35,13 +35,20 @@ namespace TW_WebSite.Controllers
 
         public ActionResult Shop()
         {
-            return View();
+            var products = _session.GetAllProducts();
+            return View(products);
         }
 
-        public ActionResult ShopSingle()
+
+        public ActionResult ShopSingle(int id)
         {
-            return View();
+            var product = _session.GetProductById(id);
+            if (product == null)
+                return HttpNotFound();
+
+            return View(product);
         }
+
 
         public ActionResult UProfile()
         {

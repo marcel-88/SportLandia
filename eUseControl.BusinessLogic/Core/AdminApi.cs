@@ -93,7 +93,7 @@ namespace eUseControl.BusinessLogic.Core
             using (var _db = new ProductContext())
             {
                 _db.Products.Add(product);
-                return _db.SaveChanges() > 0; // SaveChanges returns the number of objects written to the database
+                return _db.SaveChanges() > 0;
             }
         }
 
@@ -101,19 +101,26 @@ namespace eUseControl.BusinessLogic.Core
         {
             using (var _db = new ProductContext())
             {
-                var existingProduct = _db.Products.FirstOrDefault(p => p.Id == product.Id);
+                var existingProduct = _db.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == product.Id);
                 if (existingProduct != null)
                 {
                     existingProduct.Name = product.Name;
                     existingProduct.Price = product.Price;
                     existingProduct.Description = product.Description;
-                    existingProduct.Category = product.Category;
+                    existingProduct.CategoryId = product.CategoryId;
+
+                    if (!string.IsNullOrWhiteSpace(product.ImagePath) && existingProduct.ImagePath != product.ImagePath)
+                    {
+                        existingProduct.ImagePath = product.ImagePath;
+                    }
+
                     _db.Entry(existingProduct).State = EntityState.Modified;
                     return _db.SaveChanges() > 0;
                 }
                 return false;
             }
         }
+
 
         public bool DeleteProduct(int productId)
         {

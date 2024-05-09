@@ -9,6 +9,7 @@ using eUseControl.BusinessLogic;
 using System.Net;
 using eUseControl.Domain;
 using eUseControl.Domain.Entities.Product;
+using System.IO;
 
 namespace TW_WebSite.Controllers
 {
@@ -208,18 +209,26 @@ namespace TW_WebSite.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateProduct(Product product)
+        public ActionResult CreateProduct(Product product, HttpPostedFileBase image)
         {
             if (Request.Cookies["X-KEY"] != null)
             {
                 var token = Request.Cookies["X-KEY"].Value;
-                var UserSession = _session.GetSessionByCookie(token);
-                var User = _session.GetUserByCookie(token);
+                var userSession = _session.GetSessionByCookie(token);
+                var user = _session.GetUserByCookie(token);
 
-                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                if (userSession != null && userSession.ExpireTime > DateTime.Now && user.Level == URole.Admin)
                 {
                     if (ModelState.IsValid)
                     {
+                        if (image != null && image.ContentLength > 0)
+                        {
+                            var fileName = Path.GetFileName(image.FileName);
+                            var path = Path.Combine(Server.MapPath("~/Images"), fileName);
+                            image.SaveAs(path);
+                            product.ImagePath = "~/Images/" + fileName; // Save the path in your product object
+                        }
+
                         _session.CreateProduct(product);
                         return RedirectToAction("Products");
                     }
@@ -233,6 +242,7 @@ namespace TW_WebSite.Controllers
                 return RedirectToAction("Login", "Auth");
             }
         }
+
 
         public ActionResult EditProduct(int id)
         {
@@ -263,18 +273,26 @@ namespace TW_WebSite.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditProduct(Product product)
+        public ActionResult EditProduct(int id, Product product, HttpPostedFileBase image)
         {
             if (Request.Cookies["X-KEY"] != null)
             {
                 var token = Request.Cookies["X-KEY"].Value;
-                var UserSession = _session.GetSessionByCookie(token);
-                var User = _session.GetUserByCookie(token);
+                var userSession = _session.GetSessionByCookie(token);
+                var user = _session.GetUserByCookie(token);
 
-                if (UserSession != null && UserSession.ExpireTime > DateTime.Now && User.Level == URole.Admin)
+                if (userSession != null && userSession.ExpireTime > DateTime.Now && user.Level == URole.Admin)
                 {
                     if (ModelState.IsValid)
                     {
+                        if (image != null && image.ContentLength > 0)
+                        {
+                            var fileName = Path.GetFileName(image.FileName);
+                            var path = Path.Combine(Server.MapPath("~/Images"), fileName);
+                            image.SaveAs(path);
+                            product.ImagePath = "~/Images/" + fileName;
+                        }
+
                         _session.UpdateProduct(product);
                         return RedirectToAction("Products");
                     }
@@ -288,6 +306,7 @@ namespace TW_WebSite.Controllers
                 return RedirectToAction("Login", "Auth");
             }
         }
+
 
         [HttpPost]
         public ActionResult DeleteProduct(int id)
