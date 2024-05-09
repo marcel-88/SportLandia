@@ -127,26 +127,49 @@ namespace eUseControl.BusinessLogic.Core
         var validate = new EmailAddressAttribute();
         if (validate.IsValid(loginCredential))
         {
-          var curent = db.Sessions.FirstOrDefault(e => e.Username == loginCredential && e.ExpireTime > DateTime.Now);
-          if (curent == null)
+          DateTime cc = DateTime.Now;
+          Session curent = db.Sessions.FirstOrDefault(e => (e.ExpireTime > cc && e.Username == loginCredential));
+          // System.Diagnostics.Debug.WriteLine("0 "+curent.CookieString+" "+curent.ExpireTime+" "+curent.Username);
+          if (curent != null)
           {
+            // Session exists and is not expired
+            return new HttpCookie("X-KEY", curent.CookieString);
+          }
+          else
+          {
+            // Session doesn't exist or is expired
             var apiCookie = new HttpCookie("X-KEY")
             {
               Value = CookieGenerator.Create(loginCredential)
             };
-            curent = new Session
+
+            // Update or create a new session
+            curent = db.Sessions.FirstOrDefault(e => e.Username == loginCredential);
+            if (curent == null)
             {
-              Username = loginCredential,
-              CookieString = apiCookie.Value,
-              ExpireTime = DateTime.Now.AddMinutes(60)
-            };
-            db.Sessions.Add(curent);
-            db.SaveChanges();
+              // Create a new session
+              curent = new Session
+              {
+                Username = loginCredential,
+                CookieString = apiCookie.Value,
+                ExpireTime = DateTime.Now.AddMinutes(60)
+              };
+              System.Diagnostics.Debug.WriteLine("1 "+curent.CookieString+" "+curent.ExpireTime+" "+curent.Username);
+              db.Sessions.Add(curent);
+              db.SaveChanges();
+            }
+            else
+            {
+              // Update existing session with new cookie and expiration time
+              curent.CookieString = apiCookie.Value;
+              curent.ExpireTime = DateTime.Now.AddMinutes(60);
+              System.Diagnostics.Debug.WriteLine("2 "+curent.CookieString+" "+curent.ExpireTime+" "+curent.Username);
+              // db.Entry(curent).State = EntityState.Modified;
+              db.SaveChanges();
+            }
+
+            // db.SaveChanges();
             return apiCookie;
-          }
-          else
-          {
-            return new HttpCookie("X-KEY", curent.CookieString);
           }
         }
         else
@@ -159,46 +182,46 @@ namespace eUseControl.BusinessLogic.Core
     }
 
 
-    internal UserMinimal UserCookie(string cookie)
-    {
-      Session session;
-      ULoginData curentUser;
+        internal UserMinimal UserCookie(string cookie)
+        {
+            using (var sessionDb = new SessionContext())
+            {
+                DateTime cc = DateTime.Now;
+                System.Diagnostics.Debug.WriteLine("string Cookie: " + cookie);
+                Session session = sessionDb.Sessions.FirstOrDefault(s => (s.CookieString == cookie) && (s.ExpireTime > cc));
+                System.Diagnostics.Debug.WriteLine("UserMinimal: " + cc + " " + session.CookieString + " " + cookie + " " + session.ExpireTime);
+                if (session == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Session not found or expired");
+                    return null;
+                }
 
-      using (var db = new SessionContext())
-      {
-        session = db.Sessions.FirstOrDefault(s => s.CookieString == cookie); // && s.ExpireTime > DateTime.Now
+                using (var userDb = new UserContext())
+                {
+                    var validate = new EmailAddressAttribute();
+                    ULoginData curentUser = null;
+                    if (validate.IsValid(session.Username))
+                    {
+                        curentUser = userDb.Users.FirstOrDefault(u => u.Email == session.Username);
+                    }
+                    else
+                    {
+                        curentUser = userDb.Users.FirstOrDefault(u => u.Username == session.Username);
+                    }
+
+                    if (curentUser == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("User not found");
+                        return null;
+                    }
+                    // Assuming you've configured AutoMapper somewhere during application startup
+                    var mapperConfig = AutoMapperConfig.ConfigureMappings();
+                    var mapper = mapperConfig.CreateMapper();
+                    // Use the mapper instance to perform mappings
+                    var userMinimal = mapper.Map<UserMinimal>(curentUser);
+                    return userMinimal;
+                }
             }
-
-      // System.Diagnostics.Debug.WriteLine("1"+session.ToString());
-
-      if (session == null) return null;
-      using (var db = new UserContext())
-      {
-        var validate = new EmailAddressAttribute();
-        if (validate.IsValid(session.Username))
-        {
-          curentUser = db.Users.FirstOrDefault(u => u.Email == session.Username);
         }
-        else
-        {
-          curentUser = db.Users.FirstOrDefault(u => u.Username == session.Username);
-        }
-      }
-
-      // System.Diagnostics.Debug.WriteLine("2"+curentUser.ToString());
-
-      if (curentUser == null) return null;
-      // Assuming you've configured AutoMapper somewhere during application startup
-            var mapperConfig = AutoMapperConfig.ConfigureMappings();
-            var mapper = mapperConfig.CreateMapper();
-        // Use the mapper instance to perform mappings
-      var userminimal = mapper.Map<UserMinimal>(curentUser);
-
-      // Old Code
-      // Mapper.Initialize(cfg => cfg.CreateMap<ULoginData, UserMinimal>());
-      // var userminimal = Mapper.Map<UserMinimal>(curentUser);
-
-      return userminimal;
     }
-  }
 }
