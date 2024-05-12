@@ -26,9 +26,19 @@ namespace eUseControl.BusinessLogic
             return UserLoginAction(data);
         }
 
+        public List<Review> GetReviewsByProductId(int productId) 
+        {
+            return GetReviewsByProductIdAction(productId);
+        }
+
         public ULoginResp UserRegister(UserRegister data)
         {
             return UserRegisterAction(data);
+        }
+
+        public bool UserSubmitReview(Review data)
+        {
+            return UserSubmitReviewAction(data);
         }
 
         public HttpCookie GenCookie(string loginCredential)

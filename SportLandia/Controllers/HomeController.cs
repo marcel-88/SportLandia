@@ -1,5 +1,6 @@
 ﻿using eUseControl.BusinessLogic;
 using eUseControl.BusinessLogic.Interfaces;
+using eUseControl.Domain.Entities.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,76 @@ namespace TW_WebSite.Controllers
             var bl = new BusinessLogic();
             _session = bl.GetSessionBL();
         }
+
+        public ActionResult ShopSingle(int productId)
+        {
+            var product = _session.GetProductById(productId);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Fetch reviews for the product
+            var reviews = _session.GetReviewsByProductId(productId);
+            ViewBag.Reviews = reviews;  // Store reviews in ViewBag
+
+            return View(product);  // Pass product to the view
+        }
+        
+        public ActionResult AddReview(int productId)
+        {
+            if (Session["Username"] == null)
+            {
+                TempData["Message"] = "Please log in to add a review.";
+                return RedirectToAction("ShopSingle", new { productId = productId });
+            }
+            var product = _session.GetProductById(productId);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = new ReviewFormModel
+            {
+                ProductId = productId
+            };
+
+            ViewBag.ProductName = product.Name; // Pass product name to the view for display
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitReview(ReviewFormModel model)
+        {
+            var review = new Review
+            {
+                ProductId = model.ProductId,
+                Username = Session["Username"] as string, // Assuming you handle null cases elsewhere
+                Rating = model.Rating,
+                Comment = model.Comment,
+                DatePosted = DateTime.Now
+            };
+
+            var userSubmitReview = _session.UserSubmitReview(review);
+
+            if (userSubmitReview)
+            {
+                // Redirect to the ShopSingle action, passing the ProductId as route parameter
+                return RedirectToAction("Index","Home");
+            }
+            else
+            {
+                // If the review submission failed, return to the AddReview view
+                // Consider passing model back to preserve user input and display error messages
+                ViewBag.Error = "Failed to submit review. Please try again.";
+                return View("AddReview", model);
+            }
+        }
+
+
+
+
 
         public ActionResult Index()
         {
@@ -40,14 +111,7 @@ namespace TW_WebSite.Controllers
         }
 
 
-        public ActionResult ShopSingle(int id)
-        {
-            var product = _session.GetProductById(id);
-            if (product == null)
-                return HttpNotFound();
 
-            return View(product);
-        }
 
 
         public ActionResult UProfile()

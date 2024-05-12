@@ -10,11 +10,49 @@
         <div class="col-md-6">
             <img src="@Url.Content(Model.ImagePath)" class="img-fluid" alt="Product Image" />
         </div>
+        <!-- Add to Cart and Write Review buttons -->
         <div class="col-md-6">
             <h2>@Model.Name</h2>
             <p>@Model.Description</p>
             <h3>$@Model.Price</h3>
             <a href="@Url.Action("AddToCart", "Cart", new { id = Model.Id })" class="btn btn-primary">Add to Cart</a>
+            <a href="@Url.Action("AddReview", "Home", new { productId = Model.Id })" class="btn btn-info">Write a Review</a>
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-info">@TempData["Message"]</div>
+            }
+        </div>
+
+    </div>
+
+    <!-- Reviews will be displayed here -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Customer Reviews</h3>
+            @if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
+            {
+                foreach (var review in ViewBag.Reviews)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <strong>@review.Username</strong>
+                                <small class="text-muted">(@review.DatePosted.ToString("dd MMM yyyy"))</small>
+                            </h5>
+                            <h6 class="card-subtitle mb-2">
+                                Rating:
+                                <span class="badge bg-primary">@review.Rating</span>
+                            </h6>
+                            <p class="card-text">@review.Comment</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No reviews yet.</p>
+            }
         </div>
     </div>
+
 </div>

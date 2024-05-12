@@ -1,0 +1,36 @@
+﻿@model eUseControl.Domain.Entities.Product.ReviewFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Write a Review";
+}
+
+<div class="container">
+    <h2>Write a Review for @ViewBag.ProductName</h2>
+    @using (Html.BeginForm("SubmitReview", "Home", FormMethod.Post, new { @class = "form-horizontal", @role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <!-- Hidden input for ProductId -->
+        @Html.HiddenFor(m => m.ProductId)
+
+        <div class="form-outline mb-4">
+            @Html.LabelFor(m => m.Rating, htmlAttributes: new { @class = "form-label" })
+            @Html.DropDownListFor(m => m.Rating, new SelectList(
+                new List<Object> {
+                    new { value = "1", text = "1 - Poor" },
+                    new { value = "2", text = "2 - Fair" },
+                    new { value = "3", text = "3 - Good" },
+                    new { value = "4", text = "4 - Very Good" },
+                    new { value = "5", text = "5 - Excellent" }
+                }, "value", "text"), "Choose a rating", new { @class = "form-control form-control-lg", required = "required" })
+        </div>
+
+        <div class="form-outline mb-4">
+            @Html.LabelFor(m => m.Comment, htmlAttributes: new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.Comment, new { @class = "form-control form-control-lg", rows = "4", required = "required" })
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg btn-block">Submit Review</button>
+    }
+</div>

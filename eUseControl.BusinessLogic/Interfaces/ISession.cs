@@ -12,6 +12,8 @@ namespace eUseControl.BusinessLogic.Interfaces
 {
     public interface ISession
     {
+        List<Review> GetReviewsByProductId(int productId);
+        bool UserSubmitReview(Review data);
         ULoginResp UserLogin(UserLogin data);
         ULoginResp UserRegister(UserRegister data);
         HttpCookie GenCookie(string loginCredential);

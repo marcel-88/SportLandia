@@ -1,0 +1,21 @@
+﻿@model IEnumerable<eUseControl.Domain.Entities.Product.Review>
+
+@if (Model.Any())
+{
+    <ul class="list-unstyled">
+        @foreach (var review in Model)
+        {
+            <li>
+                <strong>@review.Username</strong> - @review.DatePosted.ToString("dd MMM yyyy")
+                <br />
+                Rating: @review.Rating
+                <br />
+                @review.Comment
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No reviews yet.</p>
+}

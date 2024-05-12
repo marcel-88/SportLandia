@@ -44,3 +44,30 @@
 
     <button type="submit" class="btn btn-primary">Create</button>
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            var isValid = true;
+            var inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = 'red'; // Highlight the input border in red if not valid
+                    input.nextElementSibling.textContent = 'This field is required'; // Assuming ValidationMessage spans are immediately after each input
+                    input.nextElementSibling.style.color = 'red';
+                } else {
+                    input.style.borderColor = ''; // Reset border color
+                    input.nextElementSibling.textContent = ''; // Clear validation message
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+                alert('Please fill in all required fields.');
+            }
+        });
+    });
+</script>

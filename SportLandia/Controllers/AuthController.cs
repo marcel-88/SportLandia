@@ -43,66 +43,69 @@ namespace TW_WebSite.Controllers
         }
 
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(UserLogin login)
         {
-            if (ModelState.IsValid)
-            {
-                UserLogin data = new UserLogin
-                {
-                    Credential = login.Credential,
-                    Password = login.Password,
-                    LoginIp = Request.UserHostAddress,
-                    LoginDateTime = DateTime.Now,
-                };
-
-                var userLogin = _session.UserLogin(data);
-                if (userLogin.Status)
-                {
-                    // Generate session token
-                    var sessionToken = _session.GenCookie(login.Credential);
-
-                    // Set session token cookie
-                    Response.Cookies.Add(sessionToken);
-
-                      System.Diagnostics.Debug.WriteLine(sessionToken);
-
-                      if (Request.Cookies["X-KEY"] != null)
-                      {
-                        var token = Request.Cookies["X-KEY"].Value;
-                        System.Diagnostics.Debug.WriteLine(token);
-                        var userMinimal = _session.GetUserByCookie(token);
-                        ViewBag.Username = userMinimal.Username;
-                        System.Diagnostics.Debug.WriteLine(userMinimal.Username);
-                      }
-                      else
-                      {
-                        return RedirectToAction("Login", "Account");
-                      }
-
-                    if (userLogin.Level == URole.Admin)
-                    {
-                        return RedirectToAction("AdminChangeProducts", "Admin");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid username or password.");
-                    return RedirectToAction("About","Home");
-                }
-            }
-            else
+            if (!ModelState.IsValid)
             {
                 return RedirectToAction("About", "Home");
-
             }
+
+            // Initialize the login details
+            UserLogin data = new UserLogin
+            {
+                Credential = login.Credential,
+                Password = login.Password,
+                LoginIp = Request.UserHostAddress,
+                LoginDateTime = DateTime.Now,
+            };
+
+            // Attempt to log the user in
+            var userLogin = _session.UserLogin(data);
+            if (!userLogin.Status)
+            {
+                ModelState.AddModelError("", "Invalid username or password.");
+                return RedirectToAction("About", "Home");
+            }
+
+            // Generate session token
+            var sessionToken = _session.GenCookie(login.Credential);
+
+            // Set session token cookie
+            Response.Cookies.Add(sessionToken);
+
+            // Check if the cookie exists after setting it
+            var cookie = Request.Cookies["X-KEY"];
+            if (cookie == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Log the token from the cookie
+            var token = cookie.Value;
+
+            // Fetch user details using the token
+            var userMinimal = _session.GetUserByCookie(token);
+            if (userMinimal == null)
+            {
+                System.Diagnostics.Debug.WriteLine("No user found with the given token.");
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Store username in session
+            Session["Username"] = userMinimal.Username;
+
+            // Redirect based on user role
+            if (userLogin.Level == URole.Admin)
+            {
+                return RedirectToAction("AdminChangeProducts", "Admin");
+            }
+
+            return RedirectToAction("Index", "Home");
         }
+
+
 
 
 

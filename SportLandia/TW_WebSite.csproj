@@ -2330,6 +2330,8 @@
     <Content Include="Views\Admin\EditCategory.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Cart\_CartSummary.cshtml" />
+    <Content Include="Views\Shared\_Reviews.cshtml" />
+    <Content Include="Views\Home\AddReview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -40,9 +40,9 @@
                                 <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
                             }
 
-                            <div class="text-center mt-3">
-                                <a href="register.html">Register</a>
-                            </div>
+                        <div class="text-center mt-3">
+                            @Html.ActionLink("Register", "Register", "Auth", null, new { @class = "btn btn-success" })
+                        </div>
                         </div>
                     </div>
                 </div>

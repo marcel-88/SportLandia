@@ -54,6 +54,8 @@
     <Compile Include="Entities\Product\Cart.cs" />
     <Compile Include="Entities\Product\Category.cs" />
     <Compile Include="Entities\Product\Product.cs" />
+    <Compile Include="Entities\Product\Review.cs" />
+    <Compile Include="Entities\Product\ReviewFormModel.cs" />
     <Compile Include="Entities\User\Session.cs" />
     <Compile Include="Entities\User\PasswordChangeModel.cs" />
     <Compile Include="Entities\User\UserMinimal.cs" />

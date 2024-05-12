@@ -13,6 +13,8 @@ using System.Web;
 using AutoMapper;
 using eUseControl.Domain;
 using System.Net;
+using eUseControl.Domain.Entities.Product;
+using System.Net.Http;
 
 namespace eUseControl.BusinessLogic.Core
 {
@@ -256,5 +258,30 @@ namespace eUseControl.BusinessLogic.Core
                 }
             }
         }
+
+        internal bool UserSubmitReviewAction(Review data)
+        {
+            using (var context = new ReviewContext())
+            {
+                try
+                {
+                    context.Reviews.Add(data);
+                    context.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
+        internal List<Review> GetReviewsByProductIdAction(int productId)
+        {
+            using (var context = new ReviewContext())
+            {
+                return context.Reviews.Where(r => r.ProductId == productId).ToList();
+            }
+        }
+
     }
 }
