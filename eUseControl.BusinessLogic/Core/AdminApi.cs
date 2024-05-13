@@ -71,6 +71,8 @@ namespace eUseControl.BusinessLogic.Core
                 return _db.Products.ToList();
             }
         }
+       
+
 
         public Product GetProductById(int productId)
         {

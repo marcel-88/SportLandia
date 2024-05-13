@@ -88,6 +88,9 @@ namespace eUseControl.BusinessLogic
         {
             return _adminApi.FetchAllProducts();
         }
+        
+
+        
 
         public Product GetProductById(int productId)
         {

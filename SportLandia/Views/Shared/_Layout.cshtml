@@ -49,11 +49,15 @@
 
     <link rel="apple-touch-icon" href="@Url.Content("/Content/img/apple-icon.png")">
     <link rel="shortcut icon" type="image/x-icon" href="@Url.Content("/Content/img/favicon.ico")">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
 
     @Styles.Render("~/bundles/css") <!-- CSS Bundle -->
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="@Url.Content("~/Content/css/fontawesome.min.css")">
-
+    @RenderSection("Scripts", required: false)
 
     <link rel="stylesheet" href="@Url.Content("https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap")">
     <link rel="stylesheet" href="@Url.Content("https://unpkg.com/leaflet@1.7.1/dist/leaflet.css")" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />

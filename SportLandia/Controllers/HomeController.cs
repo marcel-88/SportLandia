@@ -104,11 +104,13 @@ namespace TW_WebSite.Controllers
             return View();
         }
 
+
         public ActionResult Shop()
         {
             var products = _session.GetAllProducts();
             return View(products);
         }
+
 
 
 
