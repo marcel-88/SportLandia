@@ -19,8 +19,9 @@
         </div>
     }
     <h3>Total: $@Model.ComputeTotalValue()</h3>
+    <a href="@Url.Action("Checkout", "Cart", new { totalToPay = Model.ComputeTotalValue() })" class="btn btn-success">Checkout</a>
 }
 else
 {
-    <p>Your cart is empty</p>
+    <p> Your cart is empty </p>
 }

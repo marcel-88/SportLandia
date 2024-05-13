@@ -39,6 +39,22 @@ namespace TW_WebSite.Controllers
             return RedirectToAction("Index", "Cart");
         }
 
+        public ActionResult Checkout(decimal? totalToPay)
+        {
+            if (!totalToPay.HasValue)
+            {
+                return RedirectToAction("Index", "Cart");  // Redirect to the cart page or an error page
+            }
+
+            ViewBag.Total = totalToPay.Value;
+            return View();
+        }
+        public ActionResult SuccessPayment()
+        {
+            Session["Cart"] = null;
+            return View();
+        }
+
         public ActionResult Index()
         {
             var cart = Session["Cart"] as Cart;
