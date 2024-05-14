@@ -2345,6 +2345,7 @@
     <Content Include="Views\Home\AddReview.cshtml" />
     <Content Include="Views\Cart\Checkout.cshtml" />
     <Content Include="Views\Cart\SuccessPayment.cshtml" />
+    <Content Include="Views\Home\Training.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "Programe de Antrenament";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .banner {
+            background-color: #4CAF50; /* Utilizează o culoare verde similară */
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .banner h1 {
+                margin: 0;
+                font-size: 2.5em;
+            }
+
+            .banner p {
+                margin: 10px 0 0;
+                font-size: 1.2em;
+            }
+
+        .training-program {
+            margin-bottom: 30px;
+        }
+
+            .training-program h2 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+
+            .training-program p {
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+
+            .training-program ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+                .training-program ul li {
+                    background: #f8f8f8;
+                    padding: 10px;
+                    margin-bottom: 5px;
+                    border-radius: 5px;
+                }
+
+                    .training-program ul li ul {
+                        list-style-type: disc;
+                        margin-left: 20px;
+                    }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Opțional: Adaugă orice JavaScript sau jQuery personalizat aici
+        });
+    </script>
+}
+
+<div class="banner">
+    <h1>Programe de Antrenament</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+
+<div class="container body-content">
+    <div class="row">
+        <div class="col-md-4 training-program">
+            <h2>Antrenament Complet</h2>
+            <p>Explorează planurile noastre de antrenament complet concepute pentru a întări și tonifia toate grupele majore de mușchi.</p>
+            <h3>Program Săptămânal:</h3>
+            <ul>
+                <li>
+                    <strong>Luni:</strong>
+                    <ul>
+                        <li>Încălzire: 10 minute de cardio ușor</li>
+                        <li>Genuflexiuni: 3 seturi de 12 repetări</li>
+                        <li>Flotări: 3 seturi de 15 repetări</li>
+                        <li>Îndreptări: 3 seturi de 10 repetări</li>
+                        <li>Plank: 3 seturi de 1 minut</li>
+                        <li>Răcire: 5 minute de întindere</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Miercuri:</strong>
+                    <ul>
+                        <li>Încălzire: 10 minute de cardio ușor</li>
+                        <li>Fandări: 3 seturi de 12 repetări</li>
+                        <li>Tracțiuni: 3 seturi de 10 repetări</li>
+                        <li>Presă la bancă: 3 seturi de 10 repetări</li>
+                        <li>Abdomene pe bicicletă: 3 seturi de 20 repetări</li>
+                        <li>Răcire: 5 minute de întindere</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Vineri:</strong>
+                    <ul>
+                        <li>Încălzire: 10 minute de cardio ușor</li>
+                        <li>Presă pentru picioare: 3 seturi de 12 repetări</li>
+                        <li>Dips: 3 seturi de 15 repetări</li>
+                        <li>Presă pentru umeri: 3 seturi de 10 repetări</li>
+                        <li>Răsuciri rusești: 3 seturi de 20 repetări</li>
+                        <li>Răcire: 5 minute de întindere</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4 training-program">
+            <h2>Pierdere în Greutate</h2>
+            <p>Descoperă programe de pierdere în greutate care combină cardio, antrenament de forță și ghiduri nutriționale.</p>
+            <h3>Program Săptămânal:</h3>
+            <ul>
+                <li>
+                    <strong>Luni:</strong>
+                    <ul>
+                        <li>Încălzire: 5 minute de mers rapid</li>
+                        <li>Alergare în intervale: 1 minut sprint, 2 minute mers, repetă de 8 ori</li>
+                        <li>Circuite cu greutatea corporală: 3 runde de 20 genuflexiuni, 15 burpees, 10 flotări</li>
+                        <li>Antrenament pentru abdomen: 3 seturi de 20 abdomene pe bicicletă, 15 ridicări de picioare</li>
+                        <li>Răcire: 10 minute de întindere yoga</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Miercuri:</strong>
+                    <ul>
+                        <li>Încălzire: 5 minute de jumping jacks</li>
+                        <li>HIIT: 30 secunde genunchii sus, 30 secunde pauză, repetă de 10 ori</li>
+                        <li>Antrenament de forță: 3 seturi de 15 fandări, 10 dips pentru triceps</li>
+                        <li>Antrenament pentru abdomen: 3 seturi de 20 răsuciri rusești, 15 plank jacks</li>
+                        <li>Răcire: 10 minute de întindere</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Vineri:</strong>
+                    <ul>
+                        <li>Încălzire: 5 minute de jogging ușor</li>
+                        <li>Cardio: 30 minute de ciclism sau alergare</li>
+                        <li>Circuite cu greutatea corporală: 3 runde de 20 sărituri ghemuit, 15 flotări, 10 alpinist</li>
+                        <li>Antrenament pentru abdomen: 3 seturi de 20 ridicări de picioare, 15 abdomene</li>
+                        <li>Răcire: 10 minute de întindere yoga</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4 training-program">
+            <h2>Câștig de Masă Musculară</h2>
+            <p>Obține masă musculară cu rutine de antrenament țintite și recomandări dietetice.</p>
+            <h3>Program Săptămânal:</h3>
+            <ul>
+                <li>
+                    <strong>Luni:</strong>
+                    <ul>
+                        <li>Încălzire: 10 minute de întindere dinamică</li>
+                        <li>Presă la bancă: 4 seturi de 8 repetări</li>
+                        <li>Tracțiuni: 4 seturi de 10 repetări</li>
+                        <li>Flexii pentru biceps: 3 seturi de 12 repetări</li>
+                        <li>Dips pentru triceps: 3 seturi de 15 repetări</li>
+                        <li>Presă pentru picioare: 4 seturi de 10 repetări</li>
+                        <li>Răcire: 5 minute de foam rolling</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Miercuri:</strong>
+                    <ul>
+                        <li>Încălzire: 10 minute de întindere dinamică</li>
+                        <li>Îndreptări: 4 seturi de 8 repetări</li>
+                        <li>Presă pentru umeri: 4 seturi de 10 repetări</li>
+                        <li>Flexii Hammer: 3 seturi de 12 repetări</li>
+                        <li>Skull Crushers: 3 seturi de 15 repetări</li>
+                        <li>Genuflexiuni: 4 seturi de 10 repetări</li>
+                        <li>Răcire: 5 minute de foam rolling</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Vineri:</strong>
+                    <ul>
+                        <li>Încălzire: 10 minute de întindere dinamică</li>
+                        <li>Presă la bancă înclinat: 4 seturi de 8 repetări</li>
+                        <li>Tracțiuni: 4 seturi de 10 repetări</li>
+                        <li>Flexii de concentrare: 3 seturi de 12 repetări</li>
+                        <li>Extensii pentru triceps: 3 seturi de 15 repetări</li>
+                        <li>Flexii pentru picioare: 4 seturi de 10 repetări</li>
+                        <li>Răcire: 5 minute de foam rolling</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

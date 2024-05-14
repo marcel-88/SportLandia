@@ -34,6 +34,10 @@ namespace TW_WebSite.Controllers
             return View(product);  // Pass product to the view
         }
         
+        public ActionResult Training()
+        {
+            return View();
+        }
         public ActionResult AddReview(int productId)
         {
             if (Session["Username"] == null)
